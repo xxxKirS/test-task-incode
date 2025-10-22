@@ -32,7 +32,8 @@ export async function getAllBoards(req: Request, res: Response) {
 
 export async function getBoardById(req: Request, res: Response) {
   try {
-    const board = await Board.findById(req.params.id);
+    const { hashId } = req.params;
+    const board = await Board.findOne({ hashId });
     if (!board) {
       return res.status(404).json({ error: 'Board not found' });
     }
