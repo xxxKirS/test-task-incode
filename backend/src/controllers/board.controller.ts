@@ -30,18 +30,18 @@ export async function getAllBoards(req: Request, res: Response) {
   }
 }
 
-export async function getBoardById(req: Request, res: Response) {
+export const getBoard = async (req: Request, res: Response) => {
   try {
     const { hashId } = req.params;
     const board = await Board.findOne({ hashId });
-    if (!board) {
-      return res.status(404).json({ error: 'Board not found' });
-    }
-    res.status(200).json(board);
+    if (!board) return res.status(404).json({ message: 'Board not found' });
+
+    const cards = await Card.find({ boardId: board._id }).sort({ position: 1 });
+    res.json({ board, cards });
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ message: 'Error loading board' });
   }
-}
+};
 
 export async function updateBoard(req: Request, res: Response) {
   try {
