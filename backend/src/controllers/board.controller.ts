@@ -11,9 +11,12 @@ export async function createBoard(req: Request, res: Response) {
       return res.status(400).json({ error: 'Name is required' });
     }
 
+    const nanoid = customAlphabet('1234567890', 8);
+    const hashId = nanoid();
+
     const board = await Board.create({
       name,
-      hashId: customAlphabet('1234567890', 8),
+      hashId,
     });
     res.status(201).json(board);
   } catch (error) {

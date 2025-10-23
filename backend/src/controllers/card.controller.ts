@@ -28,7 +28,7 @@ export async function updateCard(req: Request, res: Response) {
 
 export async function reorderCards(req: Request, res: Response) {
   try {
-    const { boardId, updates } = req.body;
+    const { updates } = req.body; // [{ id, column, position }]
 
     const ops = updates.map((u: any) =>
       Card.findByIdAndUpdate(u.id, { column: u.column, position: u.position }),
