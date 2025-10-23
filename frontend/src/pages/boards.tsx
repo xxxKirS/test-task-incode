@@ -1,5 +1,5 @@
-import BoardCard from '@/components/shared/board-card';
-import CreateBoard from '@/components/shared/create-board';
+import BoardCard from '@/components/shared/board/board-card';
+import CreateBoard from '@/components/shared/board/create-board';
 import { useBoards } from '@/hooks/use-board';
 
 export default function Boards() {

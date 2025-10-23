@@ -7,10 +7,10 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from '../ui/form';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+} from '../../ui/form';
+import { Button } from '../../ui/button';
+import { Input } from '../../ui/input';
+import { Label } from '../../ui/label';
 import { useCreateBoard } from '@/hooks/use-board';
 
 export default function CreateBoard() {

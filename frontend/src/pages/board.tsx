@@ -1,29 +1,99 @@
+import DndCards from '@/components/shared/card/dnd-cards';
 import { Button } from '@/components/ui/button';
-import { useBoard, useDeleteBoard } from '@/hooks/use-board';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useBoard, useDeleteBoard, useUpdateBoard } from '@/hooks/use-board';
+import { useReorderCards } from '@/hooks/use-cards';
+import { createBoardSchema, type CreateBoardSchema } from '@/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Check, Edit, Trash2, X } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 export default function Board() {
   const [isEdit, setISEdit] = useState(false);
-  const { data: board, isPending, error } = useBoard();
+  const inputRef = useRef<HTMLInputElement>(null);
 
+  const { data: board, isPending, error } = useBoard();
   const { mutate: deleteBoard, isPending: isDeleting } = useDeleteBoard();
+  const { mutate: updateBoard } = useUpdateBoard();
+  const { mutate: reorderCards } = useReorderCards();
+
+  const form = useForm<CreateBoardSchema>({
+    resolver: zodResolver(createBoardSchema),
+    defaultValues: { name: board?.board.name },
+  });
 
   if (isPending) return <div>Loading...</div>;
 
-  console.log(board);
+  if (error) return <div>Something went wrong</div>;
 
-  if (error) return <div>{error.message}</div>;
+  function handleEdit() {
+    form.reset({ name: board!.board.name });
+    setISEdit(true);
+
+    setTimeout(() => {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    });
+  }
+
+  function handleUpdate(data: CreateBoardSchema) {
+    if (!inputRef.current) return;
+    updateBoard(
+      { board: data, id: board!.board._id },
+      { onSuccess: () => setISEdit(false) }
+    );
+  }
 
   return (
-    <div>
+    <div className='flex flex-col gap-4'>
       <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2'>
-        <h1 className='text-2xl font-bold'>{board.board.name}</h1>
+        {isEdit ? (
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleUpdate)}
+              className='flex w-full'
+            >
+              <FormField
+                control={form.control}
+                name='name'
+                render={({ field }) => (
+                  <FormItem className='w-full flex flex-row'>
+                    <div className='flex flex-col flex-1'>
+                      <FormControl>
+                        <Input {...field} className='w-full' ref={inputRef} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                    <Button variant='success' type='submit'>
+                      <Check className='h-4 w-4' />
+                    </Button>
+                    <Button
+                      variant='destructive'
+                      onClick={() => setISEdit(false)}
+                    >
+                      <X className='h-4 w-4' />
+                    </Button>
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        ) : (
+          <h1 className='text-2xl font-bold'>{board.board.name}</h1>
+        )}
 
         <div className='flex flex-row items-center gap-2'>
           {!isEdit && (
             <>
-              <Button variant='secondary' onClick={() => setISEdit(true)}>
+              <Button variant='secondary' onClick={handleEdit}>
                 <Edit className='h-4 w-4' />
               </Button>
               <Button
@@ -35,18 +105,14 @@ export default function Board() {
               </Button>
             </>
           )}
-          {isEdit && (
-            <>
-              <Button variant='success' onClick={() => setISEdit(false)}>
-                <Check className='h-4 w-4' />
-              </Button>
-              <Button variant='destructive' onClick={() => setISEdit(false)}>
-                <X className='h-4 w-4' />
-              </Button>
-            </>
-          )}
         </div>
       </div>
+
+      <DndCards
+        boardId={board.board._id}
+        cards={board.cards}
+        onReorder={reorderCards}
+      />
     </div>
   );
 }

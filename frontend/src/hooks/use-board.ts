@@ -42,7 +42,7 @@ export function useCreateBoard() {
       return res.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['board, boards'] });
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
 
       navigate(`/${data.hashId}`);
     },
@@ -56,12 +56,18 @@ export function useUpdateBoard() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (board: TBoard) => {
-      const res = await api.put(`${BACKEND_URL}/boards/${board.hashId}`, board);
+    mutationFn: async ({
+      board,
+      id,
+    }: {
+      board: CreateBoardSchema;
+      id: string;
+    }) => {
+      const res = await api.put(`${BACKEND_URL}/boards/${id}`, board);
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['board, boards'] });
+      queryClient.invalidateQueries({ queryKey: ['board'] });
     },
   });
 }
@@ -77,7 +83,7 @@ export function useDeleteBoard() {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['board, boards'] });
+      queryClient.invalidateQueries({ queryKey: ['boards'] });
 
       navigate('/');
     },

@@ -1,5 +1,5 @@
 import type { TBoard } from '@/types';
-import { Card, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardHeader, CardTitle } from '../../ui/card';
 import { Link } from 'react-router';
 
 export default function BoardCard(board: TBoard) {

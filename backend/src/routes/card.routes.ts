@@ -11,6 +11,6 @@ const router = express.Router();
 router.post('/', createCard);
 router.patch('/:id', updateCard);
 router.delete('/:id', deleteCard);
-router.post('/reorder', reorderCards);
+router.put('/reorder', reorderCards);
 
 export default router;

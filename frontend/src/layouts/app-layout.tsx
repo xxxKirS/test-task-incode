@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router';
 
 const queryClient = new QueryClient({
@@ -29,7 +29,11 @@ export default function AppLayout() {
             placeholder='Board id...'
             defaultValue={boardId}
             ref={ref}
-            on
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+              }
+            }}
           />
           <Button onClick={handleSearch}>Search</Button>
         </div>

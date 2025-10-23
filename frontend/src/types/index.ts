@@ -3,7 +3,7 @@ export type ColumnType = 'todo' | 'in_progress' | 'done';
 
 export type TCard = {
   _id: string;
-  title: string;
+  name: string;
   description?: string;
   column: ColumnType;
   position: number;
@@ -19,4 +19,10 @@ export type TCardUpdate = {
   id: string;
   name: string;
   description?: string;
+};
+
+export type TReorder = {
+  id: string;
+  column: ColumnType;
+  position: number;
 };
