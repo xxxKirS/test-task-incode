@@ -12,6 +12,7 @@ const allowedOrigins = process.env.FRONTEND_URL
 const corsOptions = {
   origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
