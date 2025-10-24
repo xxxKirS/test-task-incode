@@ -6,8 +6,15 @@ import cors from 'cors';
 
 const app = express();
 
-// Middlewares
-app.use(cors());
+const allowedOrigins = process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []; 
+const corsOptions = {
+    origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+};
+
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 // Routes
