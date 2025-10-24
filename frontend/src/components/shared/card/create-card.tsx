@@ -34,7 +34,6 @@ export default function CreateCard({ boardId }: { boardId: string }) {
   });
 
   function handleSubmit(data: CreateCardSchema) {
-    console.log(data);
     createCard({ card: data, boardId }, { onSuccess: () => form.reset() });
     setIsCreating(false);
   }

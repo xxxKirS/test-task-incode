@@ -156,6 +156,9 @@ export function CardItem({ card }: Props) {
           </AlertDialog>
         </div>
       </div>
+      <p className='text-muted-foreground text-sm text-wrap'>
+        {card.description}
+      </p>
       <Dialog modal open={isEditing} onOpenChange={setIsEditing}>
         <DialogContent>
           <DialogHeader>
