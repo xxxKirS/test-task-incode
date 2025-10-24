@@ -72,7 +72,6 @@ msoa806.tmp
 *.jpeg
 *.jpg~
 *.js
-*.json
 *.key
 *.lnk
 *.log
@@ -283,3 +282,9 @@ msoa806.tmp
 *.dxr
 *.dxf
 *.dxg
+
+# Ignore only data/config JSONs, not package or tsconfig files
+!package.json
+!tsconfig.json
+!tsconfig.*.json
+!eslint*.json
