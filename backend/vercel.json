@@ -1,7 +1,14 @@
 {
+  // This tells Vercel which files, after the build, should be treated as 
+  // entry points for Serverless Functions.
   "functions": {
-    "src/server.ts": {
-      "runtime": "nodejs20.x"
+    // The path MUST be to the compiled JavaScript file, relative to the Root Directory (backend).
+    "dist/server.js": {
+      // CORRECT SYNTAX: Vercel requires the runtime to be specified with the package version format.
+      "runtime": "nodejs@20.x"
     }
-  }
+  },
+  // Since this is a pure backend/API, we explicitly set the static output directory to null.
+  // This prevents the "No Output Directory named 'public'" error.
+  "outputDirectory": null
 }
