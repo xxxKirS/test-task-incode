@@ -1,4 +1,14 @@
 import DndCards from '@/components/shared/card/dnd-cards';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -96,13 +106,40 @@ export default function Board() {
               <Button variant='secondary' onClick={handleEdit}>
                 <Edit className='h-4 w-4' />
               </Button>
-              <Button
-                variant='destructive'
-                disabled={isDeleting}
-                onClick={() => deleteBoard(board.board._id)}
-              >
-                <Trash2 className='h-4 w-4' />
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant={'destructive'}
+                    size={'icon'}
+                    className='p-1! size-8'
+                  >
+                    <Trash2 className='h-2 w-2' />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      this board and remove data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel disabled={isDeleting}>
+                      Cancel
+                    </AlertDialogCancel>
+                    <Button
+                      variant={'destructive'}
+                      onClick={() => deleteBoard(board.board._id)}
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? 'Deleting...' : 'Delete'}
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </>
           )}
         </div>

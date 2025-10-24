@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router';
 
 const queryClient = new QueryClient({
@@ -15,11 +15,16 @@ const queryClient = new QueryClient({
 export default function AppLayout() {
   const { boardId } = useParams();
   const ref = useRef<HTMLInputElement>(null);
+  const [value, setValue] = useState('');
   const navigate = useNavigate();
 
   function handleSearch() {
     navigate(`/${ref.current?.value}`);
   }
+
+  useEffect(() => {
+    setValue(boardId || '');
+  }, [boardId]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -28,6 +33,8 @@ export default function AppLayout() {
           <Input
             placeholder='Board id...'
             defaultValue={boardId}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
             ref={ref}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {

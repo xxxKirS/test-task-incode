@@ -6,13 +6,14 @@ import {
   getBoard,
   updateBoard,
 } from '../controllers/board.controller';
+import { wrapAsync } from '../utils/asyncHandler';
 
 const router = express.Router();
 
-router.post('/', createBoard);
-router.get('/:hashId', getBoard);
-router.get('/', getAllBoards);
-router.put('/:id', updateBoard);
-router.delete('/:id', deleteBoard);
+router.post('/', wrapAsync(createBoard));
+router.get('/:hashId', wrapAsync(getBoard));
+router.get('/', wrapAsync(getAllBoards));
+router.put('/:id', wrapAsync(updateBoard));
+router.delete('/:id', wrapAsync(deleteBoard));
 
 export default router;

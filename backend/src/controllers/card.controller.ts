@@ -1,58 +1,50 @@
 import { Request, Response } from 'express';
 import Card from '../models/card.model';
+import {
+  BadRequestException,
+  NotFoundException,
+  InternalException,
+} from '../middlewares/errors';
 
 export async function createCard(req: Request, res: Response) {
-  try {
-    const { name, description, boardId } = req.body;
-    const card = await Card.create({ name, description, boardId });
-    res.status(201).json(card);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+  const { name, description, boardId } = req.body;
+  if (!boardId) throw new BadRequestException('boardId is required');
+
+  const card = await Card.create({ name, description, boardId });
+  return res.status(201).json(card);
 }
 
 export async function updateCard(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    const card = await Card.findByIdAndUpdate(id, req.body, { new: true });
+  const { id } = req.params;
+  const card = await Card.findByIdAndUpdate(id, req.body, { new: true });
 
-    if (!card) {
-      return res.status(404).json({ error: 'Card not found' });
-    }
-
-    res.status(200).json(card);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+  if (!card) {
+    throw new NotFoundException('Card not found');
   }
+
+  return res.status(200).json(card);
 }
 
 export async function reorderCards(req: Request, res: Response) {
-  try {
-    const { cards } = req.body; // [{ id, column, position }]
+  const { cards } = req.body; // [{ id, column, position }]
+  if (!Array.isArray(cards)) throw new BadRequestException('cards must be an array');
 
-    const ops = cards.map((u: any) =>
-      Card.findByIdAndUpdate(u.id, { column: u.column, position: u.position }),
-    );
+  const ops = cards.map((u: any) =>
+    Card.findByIdAndUpdate(u.id, { column: u.column, position: u.position }),
+  );
 
-    await Promise.all(ops);
+  await Promise.all(ops);
 
-    res.json({ message: 'Reordered successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+  return res.json({ message: 'Reordered successfully' });
 }
 
 export async function deleteCard(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    const card = await Card.findByIdAndDelete(id);
+  const { id } = req.params;
+  const card = await Card.findByIdAndDelete(id);
 
-    if (!card) {
-      return res.status(404).json({ error: 'Card not found' });
-    }
-
-    res.status(200).json({ message: 'Card deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+  if (!card) {
+    throw new NotFoundException('Card not found');
   }
+
+  return res.status(200).json({ message: 'Card deleted successfully' });
 }

@@ -33,7 +33,7 @@ export function useUpdateCard() {
 
   return useMutation({
     mutationFn: async (card: TCardUpdate) => {
-      const res = await api.put(`${BACKEND_URL}/cards/${card.id}`, card);
+      const res = await api.patch(`${BACKEND_URL}/cards/${card.id}`, card);
       return res.data;
     },
     onSuccess: () => {
@@ -48,6 +48,23 @@ export function useReorderCards() {
   return useMutation({
     mutationFn: async (cards: TReorder[]) => {
       const res = await api.put(`${BACKEND_URL}/cards/reorder`, { cards });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['board'] });
+    },
+    onError: (err) => {
+      console.error(err);
+    },
+  });
+}
+
+export function useDeleteCard() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.delete(`${BACKEND_URL}/cards/${id}`);
       return res.data;
     },
     onSuccess: () => {

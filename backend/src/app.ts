@@ -1,5 +1,5 @@
 import express from 'express';
-import { errorHandler } from './middlewares/error-handler';
+import { errorsHandlingMiddleware } from './middlewares/error-handler';
 import boardRouter from './routes/board.routes';
 import cardRouter from './routes/card.routes';
 import cors from 'cors';
@@ -15,6 +15,6 @@ app.use('/api/boards', boardRouter);
 app.use('/api/cards', cardRouter);
 
 // Global error handler
-app.use(errorHandler);
+app.use(errorsHandlingMiddleware);
 
 export default app;

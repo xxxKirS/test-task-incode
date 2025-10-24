@@ -1,17 +1,20 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import { HttpException } from './errors';
+import { logger } from '../logger';
 
-export interface AppError extends Error {
-  status?: number;
-}
-
-export const errorHandler = (
-  err: AppError,
+// TODO: improve it
+export function errorsHandlingMiddleware(
+  err: Error,
   req: Request,
   res: Response,
-  next: NextFunction
-) => {
-  console.error(err);
-  res.status(err.status || 500).json({
-    message: err.message || 'Internal Server Error',
-  });
-};
+  next: NextFunction,
+) {
+  if (err instanceof HttpException) {
+    return res.status(err.status).json(err);
+  }
+
+  logger.error('Error occurred:', err);
+  return res
+    .status(500)
+    .json({ message: 'Internal Server Error', status: 500, errors: [] });
+}
