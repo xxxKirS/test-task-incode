@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import Card from '../models/card.model';
-import {
-  BadRequestException,
-  NotFoundException,
-  InternalException,
-} from '../middlewares/errors';
+import { BadRequestException, NotFoundException } from '../middlewares/errors';
 
 export async function createCard(req: Request, res: Response) {
   const { name, description, boardId } = req.body;
@@ -27,7 +23,8 @@ export async function updateCard(req: Request, res: Response) {
 
 export async function reorderCards(req: Request, res: Response) {
   const { cards } = req.body; // [{ id, column, position }]
-  if (!Array.isArray(cards)) throw new BadRequestException('cards must be an array');
+  if (!Array.isArray(cards))
+    throw new BadRequestException('cards must be an array');
 
   const ops = cards.map((u: any) =>
     Card.findByIdAndUpdate(u.id, { column: u.column, position: u.position }),
