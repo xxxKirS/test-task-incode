@@ -6,20 +6,21 @@ import cors from 'cors';
 
 const app = express();
 
-const allowedOrigins = process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []; 
+const allowedOrigins = process.env.FRONTEND_URL
+  ? [process.env.FRONTEND_URL]
+  : [];
 const corsOptions = {
-    origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  origin: allowedOrigins.length > 0 ? allowedOrigins : '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
-
 
 app.use(cors(corsOptions));
 
 app.use(express.json());
 
 // Routes
-app.use('/api/boards', boardRouter);
-app.use('/api/cards', cardRouter);
+app.use('/boards', boardRouter);
+app.use('/cards', cardRouter);
 
 // Global error handler
 app.use(errorsHandlingMiddleware);
